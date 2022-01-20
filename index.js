@@ -1,17 +1,20 @@
-alert("WELCOME press OK to continue");
+
 var buttonColours = ["red", "blue", "green", "yellow"];
 var gamePattern = [];
 var userClickedPattern = [];
 var level = 0;
+var flag = 0;
 var started = false;
 $(".btn").click(clickmouse);
-$(document).keypress(startgame);
+$(".btnn").click(startgame);
 
 function startgame() {
     if (started==false) {
       $("#level-title").text("Level " + level);
       nextSequence();
       started = true;
+      flag=1;
+
     }
 }
 
@@ -24,6 +27,7 @@ function nextSequence() {
     gamePattern.push(randomChosenColour);
     $("#" + randomChosenColour).fadeIn(100).fadeOut(100).fadeIn(100);
     playSound(randomChosenColour);
+    highscore(level);
 }
 
 
@@ -33,6 +37,10 @@ function clickmouse() {
     playSound(userChosenColour);
     $("#" + userChosenColour).fadeIn(100).fadeOut(100).fadeIn(100);
     checkAnswer(userClickedPattern.length-1);
+    if(flag==1){
+      $(".btnn").click(startAgain);
+     
+    }
 }
 
 
@@ -44,17 +52,20 @@ function checkAnswer(currentLevel) {
           nextSequence();
         }, 1000);
       }
-    } else {
+    } 
+    else {
       console.log("wrong");
       playSound("wrong");
       $("body").addClass("game-over");
       setTimeout(function () {
         $("body").removeClass("game-over");
       }, 200);
-      $("#level-title").text("Game Over " +"\n"+ "Press Any Key to Restart");
-      
+      $("#level-title").text("Game Over, Press reset button to Restart");
+      $(".chgbtn").html('<button value="RESET" class="btnn btnn-hover">RESET</button>');
+      flag=0;
       startOver();
     }
+    
 }
 
 function playSound(name) {
@@ -67,5 +78,23 @@ function startOver() {
     level = 0;
     gamePattern = [];
     started = false;
-  }
+    $(".btnn").click(startgame);
+}
+function startAgain() {
+  level = 0;
+  gamePattern = [];
+  started = false;
+  $("#level-title").text(" Press start button to play");
+  $(".chgbtn").html('<button value="RESET" class="btnn btnn-hover">START</button>');
+  $(".btnn").click(startgame);
+}
+var input=0;
+function highscore(level){
+if(level>input){
+  input=level;
+  $(".high").html('<h2>HIGH SCORE IS:<h2>'+"level   "+input);
+}
+  
+
+}
   
